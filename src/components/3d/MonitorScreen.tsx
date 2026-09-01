@@ -6,8 +6,8 @@ export default function MonitorScreen() {
   return (
     <Html
       transform
-      position={[0, 1.8, -0.43]}
-      distanceFactor={3.4}
+      position={[0, 1.88, -0.555]}
+      distanceFactor={3.65}
       style={{
         width: "650px",
         height: "360px",
@@ -22,21 +22,23 @@ export default function MonitorScreen() {
           height: "100%",
           boxSizing: "border-box",
           padding: "24px",
-          background: "#05090b",
-          border: "1px solid rgba(120, 230, 255, 0.35)",
-          borderRadius: "8px",
+          background:
+            "linear-gradient(135deg, #071014 0%, #05090b 55%, #081216 100%)",
+          border: "1px solid rgba(120, 230, 255, 0.3)",
+          borderRadius: "6px",
           color: "#d8faff",
           fontFamily: "monospace",
           boxShadow:
-            "0 0 30px rgba(0, 180, 220, 0.15), inset 0 0 30px rgba(0, 180, 220, 0.08)",
+            "0 0 24px rgba(0, 180, 220, 0.12), inset 0 0 24px rgba(0, 180, 220, 0.06)",
         }}
       >
         <div
           style={{
             display: "flex",
             justifyContent: "space-between",
-            fontSize: "14px",
-            marginBottom: "28px",
+            fontSize: "13px",
+            marginBottom: "24px",
+            letterSpacing: "0.04em",
           }}
         >
           <span>MUZAMIL.HASSAN</span>
@@ -50,28 +52,30 @@ export default function MonitorScreen() {
           style={{
             fontSize: "30px",
             fontWeight: 700,
-            lineHeight: 1.1,
+            lineHeight: 1.05,
+            letterSpacing: "-0.03em",
           }}
         >
-          FULL-STACK
+          SOFTWARE
         </div>
 
         <div
           style={{
             fontSize: "30px",
             fontWeight: 700,
-            lineHeight: 1.1,
-            marginBottom: "25px",
+            lineHeight: 1.05,
+            marginBottom: "22px",
+            letterSpacing: "-0.03em",
           }}
         >
-          DEVELOPER
+          ENGINEERING STUDENT
         </div>
 
         <div
           style={{
             height: "1px",
-            background: "rgba(120, 230, 255, 0.25)",
-            marginBottom: "20px",
+            background: "rgba(120, 230, 255, 0.22)",
+            marginBottom: "18px",
           }}
         />
 
@@ -79,7 +83,7 @@ export default function MonitorScreen() {
           style={{
             display: "grid",
             gridTemplateColumns: "1fr 1fr",
-            gap: "10px",
+            gap: "8px",
           }}
         >
           {["NEXT.JS", "REACT", "TYPESCRIPT", "THREE.JS"].map(
@@ -87,11 +91,12 @@ export default function MonitorScreen() {
               <div
                 key={tech}
                 style={{
-                  padding: "12px",
+                  padding: "10px 12px",
                   background: "rgba(255,255,255,0.035)",
                   border: "1px solid rgba(255,255,255,0.08)",
-                  borderRadius: "5px",
-                  fontSize: "12px",
+                  borderRadius: "4px",
+                  fontSize: "11px",
+                  letterSpacing: "0.05em",
                 }}
               >
                 {tech}
@@ -102,9 +107,10 @@ export default function MonitorScreen() {
 
         <div
           style={{
-            marginTop: "25px",
-            fontSize: "11px",
-            color: "rgba(216,250,255,0.5)",
+            marginTop: "22px",
+            fontSize: "10px",
+            color: "rgba(216,250,255,0.48)",
+            letterSpacing: "0.04em",
           }}
         >
           // BUILDING DIGITAL EXPERIENCES

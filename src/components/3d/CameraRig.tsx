@@ -7,25 +7,21 @@ import * as THREE from "three";
 export default function CameraRig() {
   const { camera } = useThree();
 
-  const target = useRef(new THREE.Vector3(0, 0, 0));
+  const targetPosition = useRef(
+    new THREE.Vector3(0, 2.35, 6.4)
+  );
+
+  const lookTarget = useRef(
+    new THREE.Vector3(0, 0.75, 0)
+  );
 
   useFrame(({ pointer }) => {
-    target.current.x = pointer.x * 0.35;
-    target.current.y = pointer.y * 0.2;
+    targetPosition.current.x = pointer.x * 0.3;
+    targetPosition.current.y = 2.35 + pointer.y * 0.15;
 
-    camera.position.x = THREE.MathUtils.lerp(
-      camera.position.x,
-      target.current.x,
-      0.03
-    );
+    camera.position.lerp(targetPosition.current, 0.04);
 
-    camera.position.y = THREE.MathUtils.lerp(
-      camera.position.y,
-      target.current.y,
-      0.03
-    );
-
-    camera.lookAt(0, 0, 0);
+    camera.lookAt(lookTarget.current);
   });
 
   return null;
