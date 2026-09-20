@@ -6,8 +6,8 @@ export default function MonitorScreen() {
   return (
     <Html
       transform
-      position={[0, 1.88, -0.555]}
-      distanceFactor={3.65}
+      position={[0, 1.8, -0.43]}
+      distanceFactor={3.4}
       style={{
         width: "650px",
         height: "360px",
@@ -23,36 +23,45 @@ export default function MonitorScreen() {
           boxSizing: "border-box",
           padding: "24px",
           background:
-            "linear-gradient(135deg, #071014 0%, #05090b 55%, #081216 100%)",
-          border: "1px solid rgba(120, 230, 255, 0.3)",
-          borderRadius: "6px",
+            "linear-gradient(145deg, #05090b, #071115)",
+          border:
+            "1px solid rgba(80, 220, 245, 0.32)",
+          borderRadius: "8px",
           color: "#d8faff",
           fontFamily: "monospace",
           boxShadow:
-            "0 0 24px rgba(0, 180, 220, 0.12), inset 0 0 24px rgba(0, 180, 220, 0.06)",
+            "0 0 40px rgba(0, 180, 220, 0.12), inset 0 0 35px rgba(0, 180, 220, 0.05)",
         }}
       >
+        {/* Top bar */}
         <div
           style={{
             display: "flex",
             justifyContent: "space-between",
+            alignItems: "center",
             fontSize: "13px",
-            marginBottom: "24px",
-            letterSpacing: "0.04em",
+            marginBottom: "28px",
+            color: "rgba(216,250,255,0.72)",
           }}
         >
           <span>MUZAMIL.HASSAN</span>
 
-          <span style={{ color: "#7dffcf" }}>
-            ● SYSTEM ONLINE
+          <span
+            style={{
+              color: "#6fffd0",
+              fontSize: "12px",
+            }}
+          >
+            ● ONLINE
           </span>
         </div>
 
+        {/* Main identity */}
         <div
           style={{
-            fontSize: "30px",
+            fontSize: "29px",
             fontWeight: 700,
-            lineHeight: 1.05,
+            lineHeight: 1.1,
             letterSpacing: "-0.03em",
           }}
         >
@@ -61,59 +70,70 @@ export default function MonitorScreen() {
 
         <div
           style={{
-            fontSize: "30px",
+            fontSize: "29px",
             fontWeight: 700,
-            lineHeight: 1.05,
-            marginBottom: "22px",
+            lineHeight: 1.1,
+            marginBottom: "25px",
             letterSpacing: "-0.03em",
           }}
         >
           ENGINEERING STUDENT
         </div>
 
+        {/* Divider */}
         <div
           style={{
             height: "1px",
-            background: "rgba(120, 230, 255, 0.22)",
-            marginBottom: "18px",
+            background:
+              "rgba(120, 230, 255, 0.22)",
+            marginBottom: "20px",
           }}
         />
 
+        {/* Stack */}
         <div
           style={{
             display: "grid",
             gridTemplateColumns: "1fr 1fr",
-            gap: "8px",
+            gap: "10px",
           }}
         >
-          {["NEXT.JS", "REACT", "TYPESCRIPT", "THREE.JS"].map(
-            (tech) => (
-              <div
-                key={tech}
-                style={{
-                  padding: "10px 12px",
-                  background: "rgba(255,255,255,0.035)",
-                  border: "1px solid rgba(255,255,255,0.08)",
-                  borderRadius: "4px",
-                  fontSize: "11px",
-                  letterSpacing: "0.05em",
-                }}
-              >
-                {tech}
-              </div>
-            )
-          )}
+          {[
+            "NEXT.JS",
+            "REACT",
+            "TYPESCRIPT",
+            "THREE.JS",
+          ].map((tech) => (
+            <div
+              key={tech}
+              style={{
+                padding: "12px",
+                background:
+                  "rgba(255,255,255,0.035)",
+                border:
+                  "1px solid rgba(255,255,255,0.075)",
+                borderRadius: "5px",
+                fontSize: "11px",
+                color: "rgba(216,250,255,0.72)",
+              }}
+            >
+              {tech}
+            </div>
+          ))}
         </div>
 
+        {/* Bottom */}
         <div
           style={{
-            marginTop: "22px",
+            marginTop: "25px",
+            display: "flex",
+            justifyContent: "space-between",
             fontSize: "10px",
-            color: "rgba(216,250,255,0.48)",
-            letterSpacing: "0.04em",
+            color: "rgba(216,250,255,0.38)",
           }}
         >
-          // BUILDING DIGITAL EXPERIENCES
+          <span>// DIGITAL EXPERIENCES</span>
+          <span>v.2026</span>
         </div>
       </div>
     </Html>

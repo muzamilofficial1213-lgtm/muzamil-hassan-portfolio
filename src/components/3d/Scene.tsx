@@ -8,115 +8,83 @@ import Workspace from "./Workspace";
 export default function Scene() {
   return (
     <>
-      {/* =====================================================
-          GLOBAL SCENE
-      ===================================================== */}
-
       <color attach="background" args={["#020304"]} />
+      <fog attach="fog" args={["#020304", 9, 20]} />
 
-      <fog attach="fog" args={["#020304", 9, 18]} />
-
-      {/* =====================================================
-          LIGHTING
-      ===================================================== */}
-
-      <ambientLight intensity={0.45} />
+      <ambientLight intensity={0.35} />
 
       <Lighting />
-
-      {/* =====================================================
-          ENVIRONMENT / STAR FIELD
-      ===================================================== */}
-
       <Environment />
 
-      {/* =====================================================
-          FLOOR
-      ===================================================== */}
-
+      {/* Floor */}
       <mesh
         position={[0, -1.08, 0]}
         rotation={[-Math.PI / 2, 0, 0]}
         receiveShadow
       >
-        <planeGeometry args={[18, 18]} />
-
+        <planeGeometry args={[22, 22]} />
         <meshStandardMaterial
-          color="#111518"
+          color="#0b0f11"
           roughness={0.78}
           metalness={0.12}
         />
       </mesh>
 
-      {/* =====================================================
-          BACK WALL
-      ===================================================== */}
-
+      {/* Back wall */}
       <mesh position={[0, 3, -2.4]}>
-        <boxGeometry args={[18, 8, 0.15]} />
-
+        <boxGeometry args={[22, 8, 0.15]} />
         <meshStandardMaterial
-          color="#070a0c"
-          roughness={0.9}
-          metalness={0.05}
+          color="#050708"
+          roughness={0.92}
+          metalness={0.04}
         />
       </mesh>
 
-      {/* =====================================================
-          WALL HORIZONTAL ACCENT
-      ===================================================== */}
-
-      <mesh position={[0, 1.55, -2.30]}>
-        <boxGeometry args={[8, 0.025, 0.025]} />
-
+      {/* Cyan wall light */}
+      <mesh position={[0, 1.55, -2.3]}>
+        <boxGeometry args={[9, 0.025, 0.025]} />
         <meshStandardMaterial
-          color="#0b7285"
-          emissive="#0b7285"
-          emissiveIntensity={1.5}
-        />
-      </mesh>
-
-      {/* =====================================================
-          FLOOR BACK ACCENT
-      ===================================================== */}
-
-      <mesh position={[0, -1.045, -2.15]}>
-        <boxGeometry args={[7, 0.025, 0.025]} />
-
-        <meshStandardMaterial
-          color="#0b7285"
-          emissive="#0b7285"
+          color="#08758a"
+          emissive="#08758a"
           emissiveIntensity={1.8}
         />
       </mesh>
 
-      {/* =====================================================
-          SIDE LIGHTS
-      ===================================================== */}
+      {/* Cyan floor light */}
+      <mesh position={[1.5, -1.045, -2.15]}>
+        <boxGeometry args={[8, 0.025, 0.025]} />
+        <meshStandardMaterial
+          color="#08758a"
+          emissive="#08758a"
+          emissiveIntensity={1.8}
+        />
+      </mesh>
+
+      {/* Scene lighting */}
+      <pointLight
+        position={[-4.5, 2.2, 1]}
+        intensity={1.1}
+        distance={7}
+      />
 
       <pointLight
-        position={[-4, 2.5, 2]}
-        intensity={1.5}
+        position={[5, 2.8, 1.5]}
+        intensity={1.8}
         distance={8}
       />
 
       <pointLight
-        position={[4, 2.5, 2]}
-        intensity={1.2}
-        distance={8}
+        position={[2.8, 2.4, 2]}
+        intensity={2.4}
+        distance={7}
       />
-
-      {/* =====================================================
-          CAMERA
-      ===================================================== */}
 
       <CameraRig />
 
-      {/* =====================================================
-          MAIN WORKSPACE
-      ===================================================== */}
-
-      <Workspace />
+      {/* Main workstation */}
+      <group position={[1.15, 0, 0]}>
+        <Workspace />
+      </group>
     </>
   );
 }

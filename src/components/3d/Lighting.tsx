@@ -3,41 +3,37 @@
 export default function Lighting() {
   return (
     <>
-      {/* Base visibility */}
-      <ambientLight intensity={0.8} />
+      {/* Base illumination */}
+      <ambientLight intensity={0.32} />
 
       {/* Main soft light */}
       <directionalLight
         position={[4, 7, 6]}
-        intensity={3.2}
+        intensity={1.8}
+        castShadow
+        shadow-mapSize-width={1024}
+        shadow-mapSize-height={1024}
       />
 
-      {/* Front fill — desk details visible */}
+      {/* Monitor / workspace light */}
       <pointLight
-        position={[0, 3, 5]}
-        intensity={10}
-        distance={14}
+        position={[0, 3.5, 2.5]}
+        intensity={5.5}
+        distance={11}
       />
 
-      {/* Left side fill */}
+      {/* Cyan rim light */}
       <pointLight
-        position={[-5, 2.5, 1]}
-        intensity={5}
-        distance={12}
+        position={[-4, 2.5, -3]}
+        intensity={2.8}
+        distance={9}
       />
 
-      {/* Right side fill */}
+      {/* Subtle right-side fill */}
       <pointLight
-        position={[5, 2.5, 1]}
-        intensity={4}
-        distance={12}
-      />
-
-      {/* Back/rim light */}
-      <pointLight
-        position={[0, 3, -4]}
-        intensity={4}
-        distance={10}
+        position={[4, 1.5, 1]}
+        intensity={1.2}
+        distance={8}
       />
     </>
   );

@@ -8,19 +8,18 @@ export default function CameraRig() {
   const { camera } = useThree();
 
   const targetPosition = useRef(
-    new THREE.Vector3(0, 2.35, 6.4)
+    new THREE.Vector3(0, 1.55, 6.5)
   );
 
   const lookTarget = useRef(
-    new THREE.Vector3(0, 0.75, 0)
+    new THREE.Vector3(0.75, 0.25, 0)
   );
 
   useFrame(({ pointer }) => {
-    targetPosition.current.x = pointer.x * 0.3;
-    targetPosition.current.y = 2.35 + pointer.y * 0.15;
+    targetPosition.current.x = pointer.x * 0.18;
+    targetPosition.current.y = 1.55 + pointer.y * 0.12;
 
-    camera.position.lerp(targetPosition.current, 0.04);
-
+    camera.position.lerp(targetPosition.current, 0.035);
     camera.lookAt(lookTarget.current);
   });
 
