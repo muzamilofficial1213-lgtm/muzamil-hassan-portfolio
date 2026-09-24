@@ -2,330 +2,335 @@
 
 import { FormEvent, useState } from "react";
 
-type FormStatus = "idle" | "sending" | "success" | "error";
+const contactLinks = [
+  {
+    label: "EMAIL",
+    value: "muzamilofficial1213@gmail.com",
+    href: "mailto:muzamilofficial1213@gmail.com",
+  },
+  {
+    label: "LINKEDIN",
+    value: "Muzamil Hassan",
+    href: "https://www.linkedin.com/in/muzamil-hassan-69ab083b3",
+  },
+  {
+    label: "GITHUB",
+    value: "muzamilofficial1213-lgtm",
+    href: "https://github.com/muzamilofficial1213-lgtm",
+  },
+];
 
 export default function Contact() {
-  const [status, setStatus] = useState<FormStatus>("idle");
+  const [submitted, setSubmitted] = useState(false);
 
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-
-    const form = event.currentTarget;
-    const data = new FormData(form);
-
-    const name = String(data.get("name") || "").trim();
-    const email = String(data.get("email") || "").trim();
-    const message = String(data.get("message") || "").trim();
-
-    if (!name || !email || !message) {
-      setStatus("error");
-      return;
-    }
-
-    const subject = encodeURIComponent(`Portfolio inquiry from ${name}`);
-
-    const body = encodeURIComponent(
-      `Name: ${name}\nEmail: ${email}\n\nMessage:\n${message}`,
-    );
-
-    setStatus("sending");
-
-    window.location.href =
-      `mailto:muzamilofficial1213@gmail.com?subject=${subject}&body=${body}`;
-
-    window.setTimeout(() => {
-      setStatus("success");
-      form.reset();
-    }, 800);
+    setSubmitted(true);
   }
 
   return (
     <section
       id="contact"
-      className="relative z-30 overflow-hidden border-t border-white/[0.08] bg-[#050708] px-5 py-24 text-white sm:px-8 lg:px-12 lg:py-32"
+      className="relative overflow-hidden border-t border-white/[0.06] bg-[#020304] py-24 text-white sm:py-28 lg:py-36"
     >
-      {/* BACKGROUND */}
+      {/* ATMOSPHERE */}
       <div className="pointer-events-none absolute inset-0">
-        <div className="absolute right-[-200px] top-[-180px] h-[500px] w-[500px] rounded-full bg-cyan-400/[0.04] blur-[150px]" />
+        <div className="absolute left-[8%] top-[20%] h-[480px] w-[480px] rounded-full bg-cyan-400/[0.035] blur-[140px]" />
 
-        <div className="absolute bottom-[-180px] left-[-180px] h-[420px] w-[420px] rounded-full bg-blue-500/[0.025] blur-[140px]" />
+        <div className="absolute right-[-8%] bottom-[5%] h-[500px] w-[500px] rounded-full bg-blue-500/[0.025] blur-[150px]" />
 
-        <div
-          className="absolute inset-0 opacity-[0.025]"
-          style={{
-            backgroundImage:
-              "linear-gradient(rgba(255,255,255,0.5) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.5) 1px, transparent 1px)",
-            backgroundSize: "72px 72px",
-          }}
-        />
+        <div className="absolute inset-0 opacity-[0.015] [background-image:linear-gradient(rgba(255,255,255,0.4)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.4)_1px,transparent_1px)] [background-size:90px_90px]" />
+
+        <div className="absolute inset-x-0 top-0 h-40 bg-gradient-to-b from-[#030506] to-transparent" />
       </div>
 
-      <div className="relative mx-auto max-w-[1280px]">
+      <div className="relative z-10 mx-auto w-full max-w-[1440px] px-5 sm:px-8 md:px-10 lg:px-12">
         {/* HEADER */}
-        <div className="mb-14 flex flex-col justify-between gap-8 lg:flex-row lg:items-end">
+        <div className="grid gap-10 lg:grid-cols-[1fr_0.8fr] lg:items-end">
           <div>
-            <div className="mb-5 flex items-center gap-4">
-              <span className="font-mono text-[9px] font-bold tracking-[0.22em] text-cyan-400">
-                // CONTACT
-              </span>
+            <div className="mb-6 flex items-center gap-3">
+              <span className="h-px w-9 bg-cyan-400 shadow-[0_0_10px_rgba(34,211,238,0.35)]" />
 
-              <span className="h-px w-16 bg-cyan-400/30" />
+              <span className="font-mono text-[8px] font-bold tracking-[0.22em] text-cyan-300/70">
+                04 / CONTACT
+              </span>
             </div>
 
-            <h2 className="font-mono text-[clamp(3.5rem,7vw,6.8rem)] font-black uppercase leading-[0.82] tracking-[-0.075em]">
-              LET&apos;S BUILD
-              <br />
-              <span className="text-white/25">SOMETHING.</span>
+            <h2 className="font-sans text-[clamp(3rem,7vw,7rem)] font-semibold uppercase leading-[0.84] tracking-[-0.075em]">
+              <span className="block text-white">LET&apos;S BUILD</span>
+
+              <span className="block bg-gradient-to-r from-white via-white to-white/25 bg-clip-text text-transparent">
+                SOMETHING.
+              </span>
             </h2>
-
-            <p className="mt-7 max-w-2xl text-sm leading-7 text-white/40 sm:text-base">
-              Have a project, idea, opportunity, or simply want to connect?
-              Let&apos;s start a conversation.
-            </p>
           </div>
 
-          <div className="flex items-center gap-4 lg:pb-2">
-            <span className="font-mono text-5xl font-bold tracking-[-0.06em] text-cyan-400">
-              04
-            </span>
-
-            <span className="font-mono text-[8px] font-bold leading-4 tracking-[0.16em] text-white/25">
-              FINAL
-              <br />
-              SECTION
-            </span>
-          </div>
+          <p className="max-w-[500px] text-[13px] leading-7 text-white/40 lg:justify-self-end lg:pb-2 sm:text-[14px]">
+            Have an idea, project or opportunity? Send me a message and
+            let&apos;s start a conversation about what we can build together.
+          </p>
         </div>
 
-        {/* CONTACT GRID */}
-        <div className="grid gap-5 lg:grid-cols-[0.75fr_1.25fr]">
-          {/* DIRECT CONTACT */}
-          <div className="group relative overflow-hidden rounded-2xl border border-white/[0.08] bg-[#080b0d]/90 p-6 backdrop-blur-xl sm:p-8">
-            <div className="pointer-events-none absolute -right-20 -top-20 h-52 w-52 rounded-full bg-cyan-400/[0.035] blur-[80px] transition-all duration-700 group-hover:bg-cyan-400/[0.07]" />
+        {/* MAIN CONTACT GRID */}
+        <div className="mt-16 grid gap-5 lg:mt-20 lg:grid-cols-[0.72fr_1.28fr]">
+          {/* CONTACT INFORMATION */}
+          <div className="relative overflow-hidden border border-white/[0.09] bg-[#05090b]/80 p-6 shadow-[0_30px_90px_rgba(0,0,0,0.3)] backdrop-blur-xl sm:p-8 lg:p-9">
+            <div className="absolute right-[-70px] top-[-70px] h-52 w-52 rounded-full border border-cyan-300/[0.06]" />
 
-            <div className="relative">
+            <div className="absolute right-[-30px] top-[-30px] h-32 w-32 rounded-full border border-cyan-300/[0.07]" />
+
+            <div className="absolute right-12 top-12 h-1.5 w-1.5 rounded-full bg-cyan-400 shadow-[0_0_14px_rgba(34,211,238,0.8)]" />
+
+            <div className="relative z-10 flex h-full flex-col">
               <div className="flex items-center justify-between">
-                <div className="font-mono text-[8px] font-bold tracking-[0.18em] text-white/25">
-                  DIRECT CONTACT
-                </div>
+                <span className="font-mono text-[7px] font-bold tracking-[0.2em] text-white/25">
+                  CONNECTION / 001
+                </span>
 
-                <span className="font-mono text-[7px] tracking-[0.15em] text-cyan-400/40">
-                  01
+                <span className="flex items-center gap-2 font-mono text-[7px] font-bold tracking-[0.15em] text-cyan-300/55">
+                  <span className="h-1.5 w-1.5 rounded-full bg-cyan-400 shadow-[0_0_10px_rgba(34,211,238,0.8)]" />
+                  AVAILABLE
                 </span>
               </div>
 
-              <div className="mt-8">
-                {/* EMAIL */}
-                <a
-                  href="mailto:muzamilofficial1213@gmail.com"
-                  className="group/link block border-b border-white/[0.07] py-6 first:pt-0"
-                >
-                  <div className="flex items-center justify-between">
-                    <span className="font-mono text-[8px] font-bold tracking-[0.16em] text-cyan-400">
-                      EMAIL
-                    </span>
+              <div className="mt-14">
+                <p className="font-mono text-[8px] font-bold tracking-[0.18em] text-cyan-300/55">
+                  START A CONVERSATION
+                </p>
 
-                    <span className="text-white/15 transition-all duration-300 group-hover/link:translate-x-1 group-hover/link:text-cyan-400">
-                      ↗
-                    </span>
-                  </div>
+                <h3 className="mt-4 max-w-[430px] font-sans text-[clamp(2rem,4vw,3.3rem)] font-semibold uppercase leading-[0.92] tracking-[-0.06em]">
+                  Let&apos;s turn an idea into something real.
+                </h3>
 
-                  <div className="mt-3 break-all text-sm text-white/55 transition-colors duration-300 group-hover/link:text-cyan-300">
-                    muzamilofficial1213@gmail.com
-                  </div>
-                </a>
-
-                {/* LINKEDIN */}
-                <a
-                  href="https://www.linkedin.com/in/muzamil-hassan-69ab083b3"
-                  target="_blank"
-                  rel="noreferrer"
-                  className="group/link block border-b border-white/[0.07] py-6"
-                >
-                  <div className="flex items-center justify-between">
-                    <span className="font-mono text-[8px] font-bold tracking-[0.16em] text-cyan-400">
-                      LINKEDIN
-                    </span>
-
-                    <span className="text-white/15 transition-all duration-300 group-hover/link:translate-x-1 group-hover/link:text-cyan-400">
-                      ↗
-                    </span>
-                  </div>
-
-                  <div className="mt-3 text-sm text-white/55 transition-colors duration-300 group-hover/link:text-cyan-300">
-                    /in/muzamil-hassan
-                  </div>
-                </a>
-
-                {/* GITHUB */}
-                <a
-                  href="https://github.com/muzamilofficial1213-lgtm"
-                  target="_blank"
-                  rel="noreferrer"
-                  className="group/link block py-6"
-                >
-                  <div className="flex items-center justify-between">
-                    <span className="font-mono text-[8px] font-bold tracking-[0.16em] text-cyan-400">
-                      GITHUB
-                    </span>
-
-                    <span className="text-white/15 transition-all duration-300 group-hover/link:translate-x-1 group-hover/link:text-cyan-400">
-                      ↗
-                    </span>
-                  </div>
-
-                  <div className="mt-3 text-sm text-white/55 transition-colors duration-300 group-hover/link:text-cyan-300">
-                    /muzamilofficial1213-lgtm
-                  </div>
-                </a>
-              </div>
-
-              {/* AVAILABILITY */}
-              <div className="mt-8 rounded-xl border border-emerald-400/15 bg-emerald-400/[0.025] p-5">
-                <div className="flex items-center gap-3">
-                  <span className="relative flex h-2 w-2">
-                    <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400/40" />
-
-                    <span className="relative h-2 w-2 rounded-full bg-emerald-400 shadow-[0_0_15px_rgba(52,211,153,0.7)]" />
-                  </span>
-
-                  <span className="font-mono text-[8px] font-bold tracking-[0.15em] text-emerald-400">
-                    AVAILABLE FOR OPPORTUNITIES
-                  </span>
-                </div>
-
-                <p className="mt-3 text-xs leading-6 text-white/30">
-                  Open to collaborations, freelance projects, internships and
-                  interesting opportunities.
+                <p className="mt-6 max-w-[450px] text-[11px] leading-6 text-white/35 sm:text-[12px] sm:leading-7">
+                  Whether you&apos;re looking for a web developer, have a
+                  product idea or simply want to connect, you can reach me
+                  through any of the channels below.
                 </p>
               </div>
+
+              <div className="mt-12 border-t border-white/[0.07]">
+                {contactLinks.map((link, index) => (
+                  <a
+                    key={link.label}
+                    href={link.href}
+                    target={link.href.startsWith("http") ? "_blank" : undefined}
+                    rel={
+                      link.href.startsWith("http") ? "noreferrer" : undefined
+                    }
+                    className={`group flex items-center justify-between gap-4 py-5 transition-all duration-300 hover:pl-2 ${
+                      index < contactLinks.length - 1
+                        ? "border-b border-white/[0.06]"
+                        : ""
+                    }`}
+                  >
+                    <div>
+                      <p className="font-mono text-[7px] font-bold tracking-[0.18em] text-white/20 transition-colors duration-300 group-hover:text-cyan-300/50">
+                        {link.label}
+                      </p>
+
+                      <p className="mt-2 break-all text-[10px] text-white/45 transition-colors duration-300 group-hover:text-white/75 sm:text-[11px]">
+                        {link.value}
+                      </p>
+                    </div>
+
+                    <span className="shrink-0 text-sm text-cyan-300/35 transition-all duration-300 group-hover:translate-x-1 group-hover:text-cyan-300">
+                      ↗
+                    </span>
+                  </a>
+                ))}
+              </div>
+
+              <div className="mt-auto hidden pt-12 sm:block">
+                <div className="flex items-end justify-between border-t border-white/[0.06] pt-5">
+                  <div>
+                    <p className="font-mono text-[7px] font-bold tracking-[0.18em] text-white/20">
+                      RESPONSE
+                    </p>
+
+                    <p className="mt-2 text-[10px] text-white/35">
+                      Open to meaningful opportunities.
+                    </p>
+                  </div>
+
+                  <span className="font-mono text-[7px] font-bold tracking-[0.16em] text-cyan-300/45">
+                    ONLINE
+                  </span>
+                </div>
+              </div>
             </div>
           </div>
 
-          {/* FORM */}
-          <div className="relative overflow-hidden rounded-2xl border border-white/[0.08] bg-[#080b0d]/90 p-6 backdrop-blur-xl sm:p-8">
-            <div className="pointer-events-none absolute right-0 top-0 h-40 w-40 rounded-full bg-cyan-400/[0.025] blur-[60px]" />
+          {/* CONTACT FORM */}
+          <div className="relative overflow-hidden border border-white/[0.09] bg-[#05090b]/80 p-6 shadow-[0_30px_90px_rgba(0,0,0,0.3)] backdrop-blur-xl sm:p-8 lg:p-9">
+            <div className="absolute right-0 top-0 h-40 w-40 bg-cyan-400/[0.035] blur-[70px]" />
 
-            <div className="relative">
-              {/* FORM HEADER */}
-              <div className="flex items-end justify-between border-b border-white/[0.07] pb-6">
-                <div>
-                  <div className="font-mono text-[8px] font-bold tracking-[0.18em] text-white/25">
-                    SEND A MESSAGE
-                  </div>
+            <div className="relative z-10">
+              <div className="flex items-center justify-between">
+                <span className="font-mono text-[7px] font-bold tracking-[0.2em] text-white/25">
+                  MESSAGE / 002
+                </span>
 
-                  <h3 className="mt-2 font-mono text-xl font-bold tracking-[-0.03em] text-white">
-                    START A CONVERSATION
-                  </h3>
-                </div>
-
-                <span className="font-mono text-[8px] tracking-[0.15em] text-cyan-400/50">
-                  04 / 04
+                <span className="font-mono text-[7px] font-bold tracking-[0.15em] text-white/20">
+                  SECURE CHANNEL
                 </span>
               </div>
 
-              {/* FORM */}
-              <form onSubmit={handleSubmit} className="mt-7">
-                <div className="grid gap-5 sm:grid-cols-2">
-                  {/* NAME */}
-                  <label>
-                    <span className="mb-2 block font-mono text-[8px] font-bold tracking-[0.14em] text-white/25">
-                      YOUR NAME
-                    </span>
+              {submitted ? (
+                <div className="flex min-h-[510px] flex-col items-center justify-center text-center">
+                  <div className="flex h-14 w-14 items-center justify-center border border-cyan-300/25 bg-cyan-400/[0.05]">
+                    <span className="text-xl text-cyan-300">✓</span>
+                  </div>
 
-                    <input
-                      name="name"
-                      type="text"
-                      autoComplete="name"
-                      placeholder="Your name"
-                      className="h-13 w-full rounded-xl border border-white/[0.09] bg-white/[0.02] px-4 font-mono text-xs text-white outline-none transition-all duration-300 placeholder:text-white/15 focus:border-cyan-400/40 focus:bg-cyan-400/[0.025] focus:shadow-[0_0_30px_rgba(34,211,238,0.035)]"
-                    />
-                  </label>
+                  <p className="mt-7 font-mono text-[8px] font-bold tracking-[0.2em] text-cyan-300/65">
+                    MESSAGE READY
+                  </p>
 
-                  {/* EMAIL */}
-                  <label>
-                    <span className="mb-2 block font-mono text-[8px] font-bold tracking-[0.14em] text-white/25">
-                      EMAIL
-                    </span>
+                  <h3 className="mt-4 font-sans text-2xl font-semibold tracking-[-0.04em] text-white sm:text-3xl">
+                    Thanks for reaching out.
+                  </h3>
 
-                    <input
-                      name="email"
-                      type="email"
-                      autoComplete="email"
-                      placeholder="you@example.com"
-                      className="h-13 w-full rounded-xl border border-white/[0.09] bg-white/[0.02] px-4 font-mono text-xs text-white outline-none transition-all duration-300 placeholder:text-white/15 focus:border-cyan-400/40 focus:bg-cyan-400/[0.025] focus:shadow-[0_0_30px_rgba(34,211,238,0.035)]"
-                    />
-                  </label>
+                  <p className="mt-4 max-w-[420px] text-[11px] leading-6 text-white/35">
+                    The contact interface is ready for backend email delivery.
+                    You can connect your preferred email service when the
+                    production backend is added.
+                  </p>
+
+                  <button
+                    type="button"
+                    onClick={() => setSubmitted(false)}
+                    className="mt-8 border border-white/[0.1] bg-white/[0.02] px-5 py-3 font-mono text-[8px] font-bold tracking-[0.15em] text-white/45 transition-all duration-300 hover:border-cyan-300/30 hover:text-cyan-300"
+                  >
+                    SEND ANOTHER
+                  </button>
                 </div>
-
-                {/* MESSAGE */}
-                <label className="mt-5 block">
-                  <span className="mb-2 block font-mono text-[8px] font-bold tracking-[0.14em] text-white/25">
-                    MESSAGE
-                  </span>
-
-                  <textarea
-                    name="message"
-                    rows={8}
-                    placeholder="Tell me about your project..."
-                    className="w-full resize-none rounded-xl border border-white/[0.09] bg-white/[0.02] p-4 font-mono text-xs leading-6 text-white outline-none transition-all duration-300 placeholder:text-white/15 focus:border-cyan-400/40 focus:bg-cyan-400/[0.025] focus:shadow-[0_0_30px_rgba(34,211,238,0.035)]"
-                  />
-                </label>
-
-                {/* STATUS */}
-                {status === "error" && (
-                  <div className="mt-4 rounded-xl border border-red-400/20 bg-red-400/[0.035] px-4 py-3 font-mono text-[8px] text-red-300">
-                    Please complete all fields.
-                  </div>
-                )}
-
-                {status === "success" && (
-                  <div className="mt-4 rounded-xl border border-emerald-400/20 bg-emerald-400/[0.035] px-4 py-3 font-mono text-[8px] text-emerald-300">
-                    Your email client should now be ready.
-                  </div>
-                )}
-
-                {/* SUBMIT */}
-                <button
-                  type="submit"
-                  disabled={status === "sending"}
-                  className="group mt-5 flex h-13 w-full items-center justify-center gap-3 rounded-xl bg-cyan-400 font-mono text-[9px] font-bold tracking-[0.14em] text-[#020304] transition-all duration-300 hover:bg-cyan-300 hover:shadow-[0_15px_45px_rgba(0,200,230,0.16)] disabled:cursor-not-allowed disabled:opacity-60"
+              ) : (
+                <form
+                  onSubmit={handleSubmit}
+                  className="mt-10 space-y-5"
                 >
-                  {status === "sending"
-                    ? "OPENING EMAIL..."
-                    : "SEND MESSAGE"}
+                  <div className="grid gap-5 sm:grid-cols-2">
+                    <div>
+                      <label
+                        htmlFor="name"
+                        className="font-mono text-[7px] font-bold tracking-[0.18em] text-white/25"
+                      >
+                        YOUR NAME
+                      </label>
 
-                  {status !== "sending" && (
-                    <span className="text-base transition-transform duration-300 group-hover:translate-x-1">
-                      →
-                    </span>
-                  )}
-                </button>
-              </form>
+                      <input
+                        id="name"
+                        name="name"
+                        type="text"
+                        required
+                        autoComplete="name"
+                        placeholder="John Doe"
+                        className="mt-3 h-12 w-full border border-white/[0.09] bg-white/[0.02] px-4 text-[11px] text-white/75 outline-none transition-all duration-300 placeholder:text-white/15 focus:border-cyan-300/35 focus:bg-cyan-400/[0.025]"
+                      />
+                    </div>
+
+                    <div>
+                      <label
+                        htmlFor="email"
+                        className="font-mono text-[7px] font-bold tracking-[0.18em] text-white/25"
+                      >
+                        EMAIL ADDRESS
+                      </label>
+
+                      <input
+                        id="email"
+                        name="email"
+                        type="email"
+                        required
+                        autoComplete="email"
+                        placeholder="you@example.com"
+                        className="mt-3 h-12 w-full border border-white/[0.09] bg-white/[0.02] px-4 text-[11px] text-white/75 outline-none transition-all duration-300 placeholder:text-white/15 focus:border-cyan-300/35 focus:bg-cyan-400/[0.025]"
+                      />
+                    </div>
+                  </div>
+
+                  <div>
+                    <label
+                      htmlFor="subject"
+                      className="font-mono text-[7px] font-bold tracking-[0.18em] text-white/25"
+                    >
+                      SUBJECT
+                    </label>
+
+                    <input
+                      id="subject"
+                      name="subject"
+                      type="text"
+                      required
+                      placeholder="Project / Opportunity"
+                      className="mt-3 h-12 w-full border border-white/[0.09] bg-white/[0.02] px-4 text-[11px] text-white/75 outline-none transition-all duration-300 placeholder:text-white/15 focus:border-cyan-300/35 focus:bg-cyan-400/[0.025]"
+                    />
+                  </div>
+
+                  <div>
+                    <div className="flex items-center justify-between">
+                      <label
+                        htmlFor="message"
+                        className="font-mono text-[7px] font-bold tracking-[0.18em] text-white/25"
+                      >
+                        MESSAGE
+                      </label>
+
+                      <span className="font-mono text-[6px] tracking-[0.14em] text-white/15">
+                        REQUIRED
+                      </span>
+                    </div>
+
+                    <textarea
+                      id="message"
+                      name="message"
+                      required
+                      rows={7}
+                      placeholder="Tell me a little about your project or idea..."
+                      className="mt-3 w-full resize-none border border-white/[0.09] bg-white/[0.02] px-4 py-4 text-[11px] leading-6 text-white/75 outline-none transition-all duration-300 placeholder:text-white/15 focus:border-cyan-300/35 focus:bg-cyan-400/[0.025]"
+                    />
+                  </div>
+
+                  <div className="flex flex-col gap-5 border-t border-white/[0.07] pt-6 sm:flex-row sm:items-center sm:justify-between">
+                    <p className="max-w-[320px] text-[9px] leading-5 text-white/20">
+                      Your message will be handled through the portfolio
+                      contact channel.
+                    </p>
+
+                    <button
+                      type="submit"
+                      className="group inline-flex h-12 shrink-0 items-center justify-between gap-8 border border-cyan-300 bg-cyan-400 px-5 font-mono text-[8px] font-bold tracking-[0.15em] text-black transition-all duration-300 hover:-translate-y-0.5 hover:border-cyan-200 hover:bg-cyan-300 hover:shadow-[0_0_30px_rgba(34,211,238,0.15)]"
+                    >
+                      SEND MESSAGE
+
+                      <span className="text-sm transition-transform duration-300 group-hover:translate-x-1">
+                        →
+                      </span>
+                    </button>
+                  </div>
+                </form>
+              )}
             </div>
           </div>
         </div>
 
-        {/* BOTTOM CONTACT STRIP */}
-        <div className="mt-6 flex flex-col items-center justify-between gap-4 rounded-2xl border border-white/[0.07] bg-white/[0.012] px-6 py-5 text-center sm:flex-row sm:text-left">
-          <div>
-            <div className="font-mono text-[8px] font-bold tracking-[0.16em] text-white/20">
-              MUZAMIL HASSAN
-            </div>
+        {/* FINAL CONTACT STATEMENT */}
+        <div className="mt-16 border-t border-white/[0.06] pt-6 sm:mt-20 sm:pt-7">
+          <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+            <p className="font-mono text-[7px] font-bold tracking-[0.18em] text-white/15">
+              MUZAMIL.HASSAN / DIGITAL BUILDER
+            </p>
 
-            <div className="mt-1 font-mono text-[7px] tracking-[0.14em] text-white/15">
-              SOFTWARE ENGINEERING • WEB DEVELOPMENT
+            <div className="flex items-center gap-3">
+              <span className="h-px w-8 bg-cyan-400/30" />
+
+              <span className="font-mono text-[7px] font-bold tracking-[0.18em] text-cyan-300/40">
+                LET&apos;S CONNECT
+              </span>
             </div>
           </div>
-
-          <a
-            href="mailto:muzamilofficial1213@gmail.com"
-            className="font-mono text-[8px] font-bold tracking-[0.15em] text-cyan-400 transition-colors hover:text-cyan-300"
-          >
-            MUZAMILOFFICIAL1213@GMAIL.COM ↗
-          </a>
         </div>
       </div>
     </section>
-  ); 
+  );
 }

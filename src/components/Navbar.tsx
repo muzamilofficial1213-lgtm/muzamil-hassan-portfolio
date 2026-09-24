@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import type { CSSProperties } from "react";
 
 const navItems = [
   { label: "HOME", href: "#home" },
@@ -12,39 +13,63 @@ const navItems = [
 export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [activeSection, setActiveSection] = useState("HOME");
+
   const navRef = useRef<HTMLElement | null>(null);
+  const pointerFrameRef = useRef<number | null>(null);
+  const pointerPositionRef = useRef({ x: 0, y: 0 });
+  const sectionFrameRef = useRef<number | null>(null);
 
   useEffect(() => {
-    const sections = navItems
-      .map((item) => document.querySelector(item.href))
-      .filter(Boolean) as Element[];
+    const updateActiveSection = () => {
+      sectionFrameRef.current = null;
 
-    const observer = new IntersectionObserver(
-      (entries) => {
-        const visible = entries
-          .filter((entry) => entry.isIntersecting)
-          .sort((a, b) => b.intersectionRatio - a.intersectionRatio);
+      const activationLine =
+        window.scrollY + window.innerHeight * 0.35;
 
-        if (visible.length > 0) {
-          const id = visible[0].target.id;
-          const matchingItem = navItems.find(
-            (item) => item.href === `#${id}`,
-          );
+      let currentSection = "HOME";
 
-          if (matchingItem) {
-            setActiveSection(matchingItem.label);
-          }
+      for (const item of navItems) {
+        const section = document.querySelector(item.href);
+
+        if (!section) continue;
+
+        const rect = section.getBoundingClientRect();
+        const sectionTop = window.scrollY + rect.top;
+
+        if (activationLine >= sectionTop) {
+          currentSection = item.label;
         }
-      },
-      {
-        threshold: [0.15, 0.3, 0.5, 0.7],
-        rootMargin: "-15% 0px -55% 0px",
-      },
-    );
+      }
 
-    sections.forEach((section) => observer.observe(section));
+      setActiveSection((previous) =>
+        previous === currentSection ? previous : currentSection,
+      );
+    };
 
-    return () => observer.disconnect();
+    const handleScroll = () => {
+      if (sectionFrameRef.current !== null) return;
+
+      sectionFrameRef.current =
+        window.requestAnimationFrame(updateActiveSection);
+    };
+
+    updateActiveSection();
+
+    window.addEventListener("scroll", handleScroll, {
+      passive: true,
+    });
+
+    window.addEventListener("resize", handleScroll);
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+      window.removeEventListener("resize", handleScroll);
+
+      if (sectionFrameRef.current !== null) {
+        window.cancelAnimationFrame(sectionFrameRef.current);
+        sectionFrameRef.current = null;
+      }
+    };
   }, []);
 
   useEffect(() => {
@@ -52,29 +77,54 @@ export default function Navbar() {
 
     if (!nav) return;
 
-    const handlePointerMove = (event: PointerEvent) => {
-      if (window.innerWidth < 768) return;
+    const updateTransform = () => {
+      pointerFrameRef.current = null;
 
       const rect = nav.getBoundingClientRect();
 
-      const x = (event.clientX - rect.left) / rect.width - 0.5;
-      const y = (event.clientY - rect.top) / rect.height - 0.5;
+      const x =
+        (pointerPositionRef.current.x - rect.left) / rect.width - 0.5;
+
+      const y =
+        (pointerPositionRef.current.y - rect.top) / rect.height - 0.5;
 
       nav.style.setProperty("--nav-x", `${x}`);
       nav.style.setProperty("--nav-y", `${y}`);
     };
 
-    const handlePointerLeave = () => {
+    const handlePointerMove = (event: PointerEvent) => {
+      if (window.innerWidth < 768) return;
+
+      pointerPositionRef.current.x = event.clientX;
+      pointerPositionRef.current.y = event.clientY;
+
+      if (pointerFrameRef.current !== null) return;
+
+      pointerFrameRef.current =
+        window.requestAnimationFrame(updateTransform);
+    };
+
+    const resetTransform = () => {
+      if (pointerFrameRef.current !== null) {
+        window.cancelAnimationFrame(pointerFrameRef.current);
+        pointerFrameRef.current = null;
+      }
+
       nav.style.setProperty("--nav-x", "0");
       nav.style.setProperty("--nav-y", "0");
     };
 
     nav.addEventListener("pointermove", handlePointerMove);
-    nav.addEventListener("pointerleave", handlePointerLeave);
+    nav.addEventListener("pointerleave", resetTransform);
 
     return () => {
       nav.removeEventListener("pointermove", handlePointerMove);
-      nav.removeEventListener("pointerleave", handlePointerLeave);
+      nav.removeEventListener("pointerleave", resetTransform);
+
+      if (pointerFrameRef.current !== null) {
+        window.cancelAnimationFrame(pointerFrameRef.current);
+        pointerFrameRef.current = null;
+      }
     };
   }, []);
 
@@ -91,19 +141,20 @@ export default function Navbar() {
     }
   };
 
+  const navStyle = {
+    "--nav-x": "0",
+    "--nav-y": "0",
+    transform:
+      "perspective(1200px) rotateX(calc(var(--nav-y) * -1.8deg)) rotateY(calc(var(--nav-x) * 2.4deg))",
+  } as CSSProperties;
+
   return (
     <header className="pointer-events-none w-full px-3 pt-3 sm:px-5 sm:pt-5 lg:px-8">
       <nav
         ref={navRef}
+        aria-label="Primary navigation"
         className="pointer-events-auto relative mx-auto flex h-[66px] max-w-[1380px] items-center justify-between rounded-[18px] border border-white/[0.1] bg-[#070b0d]/65 px-3 shadow-[0_20px_80px_rgba(0,0,0,0.35)] backdrop-blur-2xl transition-transform duration-500 ease-out sm:h-[72px] sm:px-4 lg:px-5"
-        style={
-          {
-            "--nav-x": "0",
-            "--nav-y": "0",
-            transform:
-              "perspective(1200px) rotateX(calc(var(--nav-y) * -1.8deg)) rotateY(calc(var(--nav-x) * 2.4deg))",
-          } as React.CSSProperties
-        }
+        style={navStyle}
       >
         {/* CINEMATIC TOP LIGHT */}
         <div className="pointer-events-none absolute inset-x-8 top-0 h-px bg-gradient-to-r from-transparent via-cyan-300/45 to-transparent" />
@@ -196,6 +247,7 @@ export default function Navbar() {
           className="relative flex h-11 w-11 items-center justify-center rounded-xl border border-white/[0.08] bg-white/[0.025] md:hidden"
           aria-label={menuOpen ? "Close navigation" : "Open navigation"}
           aria-expanded={menuOpen}
+          aria-controls="mobile-navigation"
         >
           <span className="relative flex h-4 w-5 flex-col justify-between">
             <span
@@ -220,6 +272,7 @@ export default function Navbar() {
 
         {/* MOBILE MENU */}
         <div
+          id="mobile-navigation"
           className={`absolute left-0 right-0 top-[calc(100%+10px)] overflow-hidden rounded-[18px] border border-white/[0.1] bg-[#070b0d]/95 shadow-[0_25px_80px_rgba(0,0,0,0.5)] backdrop-blur-2xl transition-all duration-400 md:hidden ${
             menuOpen
               ? "pointer-events-auto translate-y-0 opacity-100"

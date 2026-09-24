@@ -2,83 +2,46 @@
 
 import { Canvas, useFrame } from "@react-three/fiber";
 import { Float } from "@react-three/drei";
-import { useRef } from "react";
+import { useMemo, useRef } from "react";
 import * as THREE from "three";
 
-function FloatingGeometry() {
-  const group = useRef<THREE.Group>(null);
+function createParticlePositions(count: number) {
+  const positions = new Float32Array(count * 3);
 
-  useFrame((state) => {
-    if (!group.current) return;
+  let seed = 48271;
 
-    group.current.rotation.y =
-      Math.sin(state.clock.elapsedTime * 0.12) * 0.08;
+  const random = () => {
+    seed = (seed * 16807) % 2147483647;
+    return (seed - 1) / 2147483646;
+  };
 
-    group.current.rotation.x =
-      Math.sin(state.clock.elapsedTime * 0.16) * 0.025;
-  });
+  for (let i = 0; i < count; i++) {
+    const i3 = i * 3;
 
-  return (
-    <group ref={group}>
-      <Float
-        speed={0.65}
-        rotationIntensity={0.15}
-        floatIntensity={0.25}
-      >
-        <mesh position={[2.9, 0.3, -1.8]} rotation={[0.3, 0.4, 0.2]}>
-          <icosahedronGeometry args={[1.15, 1]} />
-          <meshStandardMaterial
-            color="#071115"
-            metalness={0.9}
-            roughness={0.24}
-            wireframe
-            transparent
-            opacity={0.22}
-          />
-        </mesh>
-      </Float>
+    positions[i3] = (random() - 0.5) * 16;
+    positions[i3 + 1] = (random() - 0.5) * 9;
+    positions[i3 + 2] = (random() - 0.5) * 10;
+  }
 
-      <Float
-        speed={0.45}
-        rotationIntensity={0.1}
-        floatIntensity={0.2}
-      >
-        <mesh position={[3.7, -1.8, -2.2]}>
-          <torusGeometry args={[0.65, 0.018, 8, 48]} />
-          <meshBasicMaterial
-            color="#22d3ee"
-            transparent
-            opacity={0.22}
-          />
-        </mesh>
-      </Float>
-    </group>
-  );
+  return positions;
 }
 
 function Particles() {
   const points = useRef<THREE.Points>(null);
 
-  const particleCount = 220;
-
-  const positions = new Float32Array(particleCount * 3);
-
-  for (let i = 0; i < particleCount; i++) {
-    const i3 = i * 3;
-
-    positions[i3] = (Math.random() - 0.5) * 14;
-    positions[i3 + 1] = (Math.random() - 0.5) * 8;
-    positions[i3 + 2] = (Math.random() - 0.5) * 8;
-  }
+  const positions = useMemo(
+    () => createParticlePositions(240),
+    [],
+  );
 
   useFrame((state) => {
     if (!points.current) return;
 
-    points.current.rotation.y =
-      state.clock.elapsedTime * 0.008;
+    const elapsed = state.clock.elapsedTime;
 
+    points.current.rotation.y = elapsed * 0.006;
     points.current.rotation.x =
-      Math.sin(state.clock.elapsedTime * 0.05) * 0.015;
+      Math.sin(elapsed * 0.04) * 0.012;
   });
 
   return (
@@ -94,11 +57,156 @@ function Particles() {
         color="#22d3ee"
         size={0.018}
         transparent
-        opacity={0.42}
+        opacity={0.34}
         sizeAttenuation
         depthWrite={false}
       />
     </points>
+  );
+}
+
+function FloatingGeometry() {
+  const group = useRef<THREE.Group>(null);
+
+  useFrame((state) => {
+    if (!group.current) return;
+
+    const elapsed = state.clock.elapsedTime;
+
+    group.current.rotation.y =
+      Math.sin(elapsed * 0.12) * 0.08;
+
+    group.current.rotation.x =
+      Math.sin(elapsed * 0.16) * 0.025;
+  });
+
+  return (
+    <group ref={group}>
+      <Float
+        speed={0.55}
+        rotationIntensity={0.12}
+        floatIntensity={0.22}
+      >
+        <mesh
+          position={[3.05, 0.35, -2.4]}
+          rotation={[0.3, 0.4, 0.2]}
+        >
+          <icosahedronGeometry args={[1.2, 1]} />
+
+          <meshStandardMaterial
+            color="#071316"
+            metalness={0.92}
+            roughness={0.22}
+            wireframe
+            transparent
+            opacity={0.18}
+          />
+        </mesh>
+      </Float>
+
+      <Float
+        speed={0.4}
+        rotationIntensity={0.08}
+        floatIntensity={0.18}
+      >
+        <mesh position={[3.9, -1.55, -2.8]}>
+          <torusGeometry args={[0.72, 0.014, 8, 64]} />
+
+          <meshBasicMaterial
+            color="#22d3ee"
+            transparent
+            opacity={0.2}
+          />
+        </mesh>
+      </Float>
+
+      <Float
+        speed={0.3}
+        rotationIntensity={0.08}
+        floatIntensity={0.12}
+      >
+        <mesh
+          position={[-3.7, 1.8, -3.5]}
+          rotation={[0.4, 0.2, 0.1]}
+        >
+          <octahedronGeometry args={[0.32, 0]} />
+
+          <meshBasicMaterial
+            color="#147eff"
+            wireframe
+            transparent
+            opacity={0.16}
+          />
+        </mesh>
+      </Float>
+    </group>
+  );
+}
+
+function OrbitalRing() {
+  const ring = useRef<THREE.Mesh>(null);
+
+  useFrame((state) => {
+    if (!ring.current) return;
+
+    const elapsed = state.clock.elapsedTime;
+
+    ring.current.rotation.x =
+      Math.PI * 0.5 + Math.sin(elapsed * 0.08) * 0.08;
+
+    ring.current.rotation.z = elapsed * 0.025;
+  });
+
+  return (
+    <mesh
+      ref={ring}
+      position={[2.9, -1.45, -3.2]}
+    >
+      <torusGeometry args={[1.25, 0.012, 8, 96]} />
+
+      <meshBasicMaterial
+        color="#22d3ee"
+        transparent
+        opacity={0.11}
+      />
+    </mesh>
+  );
+}
+
+function HorizonGrid() {
+  return (
+    <group position={[0, -2.55, -4]}>
+      {Array.from({ length: 9 }).map((_, index) => (
+        <mesh
+          key={`horizontal-${index}`}
+          position={[0, index * 0.08, 0]}
+        >
+          <planeGeometry args={[15, 0.006]} />
+
+          <meshBasicMaterial
+            color="#22d3ee"
+            transparent
+            opacity={0.025}
+          />
+        </mesh>
+      ))}
+
+      {Array.from({ length: 13 }).map((_, index) => (
+        <mesh
+          key={`vertical-${index}`}
+          position={[(index - 6) * 1.15, 0.25, 0]}
+          rotation={[0, 0, 0]}
+        >
+          <planeGeometry args={[0.004, 1.5]} />
+
+          <meshBasicMaterial
+            color="#22d3ee"
+            transparent
+            opacity={0.018}
+          />
+        </mesh>
+      ))}
+    </group>
   );
 }
 
@@ -136,37 +244,51 @@ export default function HeroScene() {
           powerPreference: "high-performance",
         }}
       >
-        <fog attach="fog" args={["#030506", 7, 18]} />
+        <fog
+          attach="fog"
+          args={["#030506", 6, 18]}
+        />
 
-        <ambientLight intensity={0.25} />
+        <ambientLight intensity={0.22} />
 
         <pointLight
           position={[4, 2, 4]}
-          intensity={3}
+          intensity={2.8}
           color="#22d3ee"
           distance={10}
         />
 
         <pointLight
           position={[-4, -2, 2]}
-          intensity={1.4}
+          intensity={1.2}
           color="#147eff"
           distance={9}
         />
 
         <Particles />
         <FloatingGeometry />
+        <OrbitalRing />
+        <HorizonGrid />
         <CameraMotion />
       </Canvas>
 
-      {/* cinematic overlays */}
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_72%_46%,rgba(34,211,238,0.07),transparent_30%)]" />
+      {/* Central atmospheric glow */}
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_72%_48%,rgba(34,211,238,0.075),transparent_28%)]" />
 
-      <div className="absolute inset-0 bg-[linear-gradient(to_bottom,rgba(3,5,6,0.05),rgba(3,5,6,0.5))]" />
+      {/* Secondary blue depth */}
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_88%_70%,rgba(20,126,255,0.045),transparent_28%)]" />
 
-      <div className="absolute inset-y-0 left-0 w-[42%] bg-gradient-to-r from-[#030506] via-[#030506]/85 to-transparent" />
+      {/* Top cinematic vignette */}
+      <div className="absolute inset-x-0 top-0 h-[32%] bg-gradient-to-b from-[#030506]/65 to-transparent" />
 
-      <div className="absolute inset-x-0 bottom-0 h-[24%] bg-gradient-to-t from-[#030506] to-transparent" />
+      {/* Left readability layer */}
+      <div className="absolute inset-y-0 left-0 w-[46%] bg-gradient-to-r from-[#030506] via-[#030506]/90 to-transparent" />
+
+      {/* Bottom cinematic fade */}
+      <div className="absolute inset-x-0 bottom-0 h-[28%] bg-gradient-to-t from-[#030506] to-transparent" />
+
+      {/* Very subtle screen-like atmospheric texture */}
+      <div className="absolute inset-0 opacity-[0.025] [background-image:linear-gradient(rgba(255,255,255,0.35)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.35)_1px,transparent_1px)] [background-size:80px_80px]" />
     </div>
   );
 }
