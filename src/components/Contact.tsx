@@ -20,314 +20,348 @@ const contactLinks = [
   },
 ];
 
-export default function Contact() {
-  const [submitted, setSubmitted] = useState(false);
+type FormState = {
+  name: string;
+  email: string;
+  subject: string;
+  message: string;
+};
 
-  function handleSubmit(event: FormEvent<HTMLFormElement>) {
+const initialForm: FormState = {
+  name: "",
+  email: "",
+  subject: "",
+  message: "",
+};
+
+export default function Contact() {
+  const [form, setForm] = useState<FormState>(initialForm);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitted, setSubmitted] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
+
+  function handleChange(
+    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+  ) {
+    const { name, value } = event.target;
+
+    setForm((current) => ({
+      ...current,
+      [name]: value,
+    }));
+
+    if (errorMessage) {
+      setErrorMessage("");
+    }
+  }
+
+  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    setSubmitted(true);
+
+    if (isSubmitting) {
+      return;
+    }
+
+    setIsSubmitting(true);
+    setErrorMessage("");
+
+    try {
+      const response = await fetch("/api/contact", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(form),
+      });
+
+      const data: {
+        success?: boolean;
+        message?: string;
+      } = await response.json();
+
+      if (!response.ok || !data.success) {
+        throw new Error(
+          data.message || "Unable to send your message right now.",
+        );
+      }
+
+      setForm(initialForm);
+      setSubmitted(true);
+    } catch (error) {
+      console.error("Contact form error:", error);
+
+      setErrorMessage(
+        error instanceof Error
+          ? error.message
+          : "Something went wrong. Please try again later.",
+      );
+    } finally {
+      setIsSubmitting(false);
+    }
+  }
+
+  function handleSendAnother() {
+    setSubmitted(false);
+    setErrorMessage("");
   }
 
   return (
     <section
       id="contact"
-      className="relative overflow-hidden border-t border-white/[0.06] bg-[#020304] py-24 text-white sm:py-28 lg:py-36"
+      className="relative overflow-hidden border-t border-white/8 bg-[#050608] py-24 sm:py-28 lg:py-32"
     >
-      {/* ATMOSPHERE */}
-      <div className="pointer-events-none absolute inset-0">
-        <div className="absolute left-[8%] top-[20%] h-[480px] w-[480px] rounded-full bg-cyan-400/[0.035] blur-[140px]" />
+      {/* Ambient background */}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute left-[-12rem] top-[-10rem] h-[28rem] w-[28rem] rounded-full bg-cyan-400/8 blur-[120px]"
+      />
 
-        <div className="absolute right-[-8%] bottom-[5%] h-[500px] w-[500px] rounded-full bg-blue-500/[0.025] blur-[150px]" />
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute bottom-[-14rem] right-[-10rem] h-[30rem] w-[30rem] rounded-full bg-blue-500/8 blur-[130px]"
+      />
 
-        <div className="absolute inset-0 opacity-[0.015] [background-image:linear-gradient(rgba(255,255,255,0.4)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.4)_1px,transparent_1px)] [background-size:90px_90px]" />
-
-        <div className="absolute inset-x-0 top-0 h-40 bg-gradient-to-b from-[#030506] to-transparent" />
-      </div>
-
-      <div className="relative z-10 mx-auto w-full max-w-[1440px] px-5 sm:px-8 md:px-10 lg:px-12">
-        {/* HEADER */}
-        <div className="grid gap-10 lg:grid-cols-[1fr_0.8fr] lg:items-end">
-          <div>
-            <div className="mb-6 flex items-center gap-3">
-              <span className="h-px w-9 bg-cyan-400 shadow-[0_0_10px_rgba(34,211,238,0.35)]" />
-
-              <span className="font-mono text-[8px] font-bold tracking-[0.22em] text-cyan-300/70">
-                04 / CONTACT
-              </span>
-            </div>
-
-            <h2 className="font-sans text-[clamp(3rem,7vw,7rem)] font-semibold uppercase leading-[0.84] tracking-[-0.075em]">
-              <span className="block text-white">LET&apos;S BUILD</span>
-
-              <span className="block bg-gradient-to-r from-white via-white to-white/25 bg-clip-text text-transparent">
-                SOMETHING.
-              </span>
-            </h2>
+      <div className="relative mx-auto max-w-7xl px-6 sm:px-8 lg:px-10">
+        {/* Section heading */}
+        <div className="max-w-3xl">
+          <div className="mb-5 flex items-center gap-3">
+            <span className="h-px w-10 bg-cyan-400" />
+            <span className="text-[11px] font-medium tracking-[0.28em] text-cyan-300/90">
+              CONTACT
+            </span>
           </div>
 
-          <p className="max-w-[500px] text-[13px] leading-7 text-white/40 lg:justify-self-end lg:pb-2 sm:text-[14px]">
-            Have an idea, project or opportunity? Send me a message and
-            let&apos;s start a conversation about what we can build together.
+          <h2 className="text-4xl font-semibold tracking-[-0.04em] text-white sm:text-5xl lg:text-6xl">
+            LET&apos;S BUILD
+            <span className="block text-white/35">SOMETHING GREAT.</span>
+          </h2>
+
+          <p className="mt-6 max-w-2xl text-sm leading-7 text-white/55 sm:text-base">
+            Have a project, opportunity, or idea in mind? Send me a message
+            and I&apos;ll get back to you as soon as possible.
           </p>
         </div>
 
-        {/* MAIN CONTACT GRID */}
-        <div className="mt-16 grid gap-5 lg:mt-20 lg:grid-cols-[0.72fr_1.28fr]">
-          {/* CONTACT INFORMATION */}
-          <div className="relative overflow-hidden border border-white/[0.09] bg-[#05090b]/80 p-6 shadow-[0_30px_90px_rgba(0,0,0,0.3)] backdrop-blur-xl sm:p-8 lg:p-9">
-            <div className="absolute right-[-70px] top-[-70px] h-52 w-52 rounded-full border border-cyan-300/[0.06]" />
+        {/* Main contact layout */}
+        <div className="mt-14 grid gap-10 lg:grid-cols-[0.85fr_1.15fr] lg:gap-16">
+          {/* Contact information */}
+          <div className="flex flex-col justify-between">
+            <div>
+              <p className="text-xs font-medium tracking-[0.2em] text-white/35">
+                GET IN TOUCH
+              </p>
 
-            <div className="absolute right-[-30px] top-[-30px] h-32 w-32 rounded-full border border-cyan-300/[0.07]" />
-
-            <div className="absolute right-12 top-12 h-1.5 w-1.5 rounded-full bg-cyan-400 shadow-[0_0_14px_rgba(34,211,238,0.8)]" />
-
-            <div className="relative z-10 flex h-full flex-col">
-              <div className="flex items-center justify-between">
-                <span className="font-mono text-[7px] font-bold tracking-[0.2em] text-white/25">
-                  CONNECTION / 001
-                </span>
-
-                <span className="flex items-center gap-2 font-mono text-[7px] font-bold tracking-[0.15em] text-cyan-300/55">
-                  <span className="h-1.5 w-1.5 rounded-full bg-cyan-400 shadow-[0_0_10px_rgba(34,211,238,0.8)]" />
-                  AVAILABLE
-                </span>
-              </div>
-
-              <div className="mt-14">
-                <p className="font-mono text-[8px] font-bold tracking-[0.18em] text-cyan-300/55">
-                  START A CONVERSATION
-                </p>
-
-                <h3 className="mt-4 max-w-[430px] font-sans text-[clamp(2rem,4vw,3.3rem)] font-semibold uppercase leading-[0.92] tracking-[-0.06em]">
-                  Let&apos;s turn an idea into something real.
-                </h3>
-
-                <p className="mt-6 max-w-[450px] text-[11px] leading-6 text-white/35 sm:text-[12px] sm:leading-7">
-                  Whether you&apos;re looking for a web developer, have a
-                  product idea or simply want to connect, you can reach me
-                  through any of the channels below.
-                </p>
-              </div>
-
-              <div className="mt-12 border-t border-white/[0.07]">
-                {contactLinks.map((link, index) => (
+              <div className="mt-7 space-y-4">
+                {contactLinks.map((link) => (
                   <a
                     key={link.label}
                     href={link.href}
-                    target={link.href.startsWith("http") ? "_blank" : undefined}
-                    rel={
-                      link.href.startsWith("http") ? "noreferrer" : undefined
+                    target={
+                      link.href.startsWith("http") ? "_blank" : undefined
                     }
-                    className={`group flex items-center justify-between gap-4 py-5 transition-all duration-300 hover:pl-2 ${
-                      index < contactLinks.length - 1
-                        ? "border-b border-white/[0.06]"
-                        : ""
-                    }`}
+                    rel={
+                      link.href.startsWith("http")
+                        ? "noopener noreferrer"
+                        : undefined
+                    }
+                    className="group block border-b border-white/8 pb-4 transition-colors duration-300 hover:border-cyan-400/35"
                   >
-                    <div>
-                      <p className="font-mono text-[7px] font-bold tracking-[0.18em] text-white/20 transition-colors duration-300 group-hover:text-cyan-300/50">
-                        {link.label}
-                      </p>
+                    <span className="block text-[10px] tracking-[0.2em] text-white/30">
+                      {link.label}
+                    </span>
 
-                      <p className="mt-2 break-all text-[10px] text-white/45 transition-colors duration-300 group-hover:text-white/75 sm:text-[11px]">
-                        {link.value}
-                      </p>
-                    </div>
-
-                    <span className="shrink-0 text-sm text-cyan-300/35 transition-all duration-300 group-hover:translate-x-1 group-hover:text-cyan-300">
-                      ↗
+                    <span className="mt-2 block break-all text-sm text-white/70 transition-colors duration-300 group-hover:text-cyan-300 sm:text-base">
+                      {link.value}
                     </span>
                   </a>
                 ))}
               </div>
+            </div>
 
-              <div className="mt-auto hidden pt-12 sm:block">
-                <div className="flex items-end justify-between border-t border-white/[0.06] pt-5">
-                  <div>
-                    <p className="font-mono text-[7px] font-bold tracking-[0.18em] text-white/20">
-                      RESPONSE
-                    </p>
+            <div className="mt-12 hidden lg:block">
+              <p className="text-[10px] tracking-[0.2em] text-white/25">
+                AVAILABLE FOR
+              </p>
 
-                    <p className="mt-2 text-[10px] text-white/35">
-                      Open to meaningful opportunities.
-                    </p>
-                  </div>
-
-                  <span className="font-mono text-[7px] font-bold tracking-[0.16em] text-cyan-300/45">
-                    ONLINE
-                  </span>
-                </div>
-              </div>
+              <p className="mt-3 max-w-xs text-sm leading-6 text-white/45">
+                Freelance projects, collaborations, software engineering
+                opportunities, and interesting digital products.
+              </p>
             </div>
           </div>
 
-          {/* CONTACT FORM */}
-          <div className="relative overflow-hidden border border-white/[0.09] bg-[#05090b]/80 p-6 shadow-[0_30px_90px_rgba(0,0,0,0.3)] backdrop-blur-xl sm:p-8 lg:p-9">
-            <div className="absolute right-0 top-0 h-40 w-40 bg-cyan-400/[0.035] blur-[70px]" />
-
-            <div className="relative z-10">
-              <div className="flex items-center justify-between">
-                <span className="font-mono text-[7px] font-bold tracking-[0.2em] text-white/25">
-                  MESSAGE / 002
-                </span>
-
-                <span className="font-mono text-[7px] font-bold tracking-[0.15em] text-white/20">
-                  SECURE CHANNEL
-                </span>
-              </div>
-
-              {submitted ? (
-                <div className="flex min-h-[510px] flex-col items-center justify-center text-center">
-                  <div className="flex h-14 w-14 items-center justify-center border border-cyan-300/25 bg-cyan-400/[0.05]">
-                    <span className="text-xl text-cyan-300">✓</span>
-                  </div>
-
-                  <p className="mt-7 font-mono text-[8px] font-bold tracking-[0.2em] text-cyan-300/65">
-                    MESSAGE READY
-                  </p>
-
-                  <h3 className="mt-4 font-sans text-2xl font-semibold tracking-[-0.04em] text-white sm:text-3xl">
-                    Thanks for reaching out.
-                  </h3>
-
-                  <p className="mt-4 max-w-[420px] text-[11px] leading-6 text-white/35">
-                    The contact interface is ready for backend email delivery.
-                    You can connect your preferred email service when the
-                    production backend is added.
-                  </p>
-
-                  <button
-                    type="button"
-                    onClick={() => setSubmitted(false)}
-                    className="mt-8 border border-white/[0.1] bg-white/[0.02] px-5 py-3 font-mono text-[8px] font-bold tracking-[0.15em] text-white/45 transition-all duration-300 hover:border-cyan-300/30 hover:text-cyan-300"
+          {/* Contact form */}
+          <div className="rounded-2xl border border-white/8 bg-white/[0.025] p-6 backdrop-blur-xl sm:p-8">
+            {submitted ? (
+              <div className="flex min-h-[510px] flex-col items-center justify-center text-center">
+                <div className="flex h-16 w-16 items-center justify-center rounded-full border border-cyan-400/25 bg-cyan-400/8">
+                  <svg
+                    aria-hidden="true"
+                    className="h-7 w-7 text-cyan-300"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="1.8"
                   >
-                    SEND ANOTHER
-                  </button>
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="m5 12 4 4L19 6"
+                    />
+                  </svg>
                 </div>
-              ) : (
-                <form
-                  onSubmit={handleSubmit}
-                  className="mt-10 space-y-5"
+
+                <p className="mt-7 text-[10px] font-medium tracking-[0.25em] text-cyan-300">
+                  MESSAGE SENT
+                </p>
+
+                <h3 className="mt-4 text-2xl font-semibold tracking-[-0.03em] text-white sm:text-3xl">
+                  Thanks for reaching out.
+                </h3>
+
+                <p className="mt-4 max-w-md text-sm leading-7 text-white/45">
+                  Your message has been delivered successfully. I&apos;ll
+                  review it and get back to you as soon as possible.
+                </p>
+
+                <button
+                  type="button"
+                  onClick={handleSendAnother}
+                  className="mt-8 border border-white/12 bg-white/[0.03] px-6 py-3 text-[10px] font-medium tracking-[0.2em] text-white/70 transition-all duration-300 hover:border-cyan-400/35 hover:bg-cyan-400/5 hover:text-cyan-300"
                 >
-                  <div className="grid gap-5 sm:grid-cols-2">
-                    <div>
-                      <label
-                        htmlFor="name"
-                        className="font-mono text-[7px] font-bold tracking-[0.18em] text-white/25"
-                      >
-                        YOUR NAME
-                      </label>
+                  SEND ANOTHER
+                </button>
+              </div>
+            ) : (
+              <form onSubmit={handleSubmit} className="space-y-5">
+                <div className="grid gap-5 sm:grid-cols-2">
+                  <div>
+                    <label
+                      htmlFor="name"
+                      className="mb-2 block text-[10px] font-medium tracking-[0.18em] text-white/35"
+                    >
+                      NAME
+                    </label>
 
-                      <input
-                        id="name"
-                        name="name"
-                        type="text"
-                        required
-                        autoComplete="name"
-                        placeholder="John Doe"
-                        className="mt-3 h-12 w-full border border-white/[0.09] bg-white/[0.02] px-4 text-[11px] text-white/75 outline-none transition-all duration-300 placeholder:text-white/15 focus:border-cyan-300/35 focus:bg-cyan-400/[0.025]"
-                      />
-                    </div>
-
-                    <div>
-                      <label
-                        htmlFor="email"
-                        className="font-mono text-[7px] font-bold tracking-[0.18em] text-white/25"
-                      >
-                        EMAIL ADDRESS
-                      </label>
-
-                      <input
-                        id="email"
-                        name="email"
-                        type="email"
-                        required
-                        autoComplete="email"
-                        placeholder="you@example.com"
-                        className="mt-3 h-12 w-full border border-white/[0.09] bg-white/[0.02] px-4 text-[11px] text-white/75 outline-none transition-all duration-300 placeholder:text-white/15 focus:border-cyan-300/35 focus:bg-cyan-400/[0.025]"
-                      />
-                    </div>
+                    <input
+                      id="name"
+                      name="name"
+                      type="text"
+                      required
+                      autoComplete="name"
+                      value={form.name}
+                      onChange={handleChange}
+                      placeholder="John Doe"
+                      disabled={isSubmitting}
+                      className="h-12 w-full border border-white/10 bg-white/[0.025] px-4 text-sm text-white outline-none transition-all duration-300 placeholder:text-white/20 focus:border-cyan-400/40 focus:bg-white/[0.04] disabled:cursor-not-allowed disabled:opacity-50"
+                    />
                   </div>
 
                   <div>
                     <label
-                      htmlFor="subject"
-                      className="font-mono text-[7px] font-bold tracking-[0.18em] text-white/25"
+                      htmlFor="email"
+                      className="mb-2 block text-[10px] font-medium tracking-[0.18em] text-white/35"
                     >
-                      SUBJECT
+                      EMAIL
                     </label>
 
                     <input
-                      id="subject"
-                      name="subject"
-                      type="text"
+                      id="email"
+                      name="email"
+                      type="email"
                       required
-                      placeholder="Project / Opportunity"
-                      className="mt-3 h-12 w-full border border-white/[0.09] bg-white/[0.02] px-4 text-[11px] text-white/75 outline-none transition-all duration-300 placeholder:text-white/15 focus:border-cyan-300/35 focus:bg-cyan-400/[0.025]"
+                      autoComplete="email"
+                      value={form.email}
+                      onChange={handleChange}
+                      placeholder="you@example.com"
+                      disabled={isSubmitting}
+                      className="h-12 w-full border border-white/10 bg-white/[0.025] px-4 text-sm text-white outline-none transition-all duration-300 placeholder:text-white/20 focus:border-cyan-400/40 focus:bg-white/[0.04] disabled:cursor-not-allowed disabled:opacity-50"
                     />
                   </div>
+                </div>
 
-                  <div>
-                    <div className="flex items-center justify-between">
-                      <label
-                        htmlFor="message"
-                        className="font-mono text-[7px] font-bold tracking-[0.18em] text-white/25"
-                      >
-                        MESSAGE
-                      </label>
+                <div>
+                  <label
+                    htmlFor="subject"
+                    className="mb-2 block text-[10px] font-medium tracking-[0.18em] text-white/35"
+                  >
+                    SUBJECT
+                  </label>
 
-                      <span className="font-mono text-[6px] tracking-[0.14em] text-white/15">
-                        REQUIRED
-                      </span>
-                    </div>
+                  <input
+                    id="subject"
+                    name="subject"
+                    type="text"
+                    required
+                    value={form.subject}
+                    onChange={handleChange}
+                    placeholder="Project / Opportunity"
+                    disabled={isSubmitting}
+                    className="h-12 w-full border border-white/10 bg-white/[0.025] px-4 text-sm text-white outline-none transition-all duration-300 placeholder:text-white/20 focus:border-cyan-400/40 focus:bg-white/[0.04] disabled:cursor-not-allowed disabled:opacity-50"
+                  />
+                </div>
 
-                    <textarea
-                      id="message"
-                      name="message"
-                      required
-                      rows={7}
-                      placeholder="Tell me a little about your project or idea..."
-                      className="mt-3 w-full resize-none border border-white/[0.09] bg-white/[0.02] px-4 py-4 text-[11px] leading-6 text-white/75 outline-none transition-all duration-300 placeholder:text-white/15 focus:border-cyan-300/35 focus:bg-cyan-400/[0.025]"
-                    />
+                <div>
+                  <label
+                    htmlFor="message"
+                    className="mb-2 block text-[10px] font-medium tracking-[0.18em] text-white/35"
+                  >
+                    MESSAGE
+                  </label>
+
+                  <textarea
+                    id="message"
+                    name="message"
+                    required
+                    rows={7}
+                    value={form.message}
+                    onChange={handleChange}
+                    placeholder="Tell me a little about your project or idea..."
+                    disabled={isSubmitting}
+                    className="w-full resize-none border border-white/10 bg-white/[0.025] px-4 py-4 text-sm leading-6 text-white outline-none transition-all duration-300 placeholder:text-white/20 focus:border-cyan-400/40 focus:bg-white/[0.04] disabled:cursor-not-allowed disabled:opacity-50"
+                  />
+                </div>
+
+                {errorMessage && (
+                  <div
+                    role="alert"
+                    className="border border-red-400/15 bg-red-400/5 px-4 py-3 text-xs leading-5 text-red-300/90"
+                  >
+                    {errorMessage}
                   </div>
+                )}
 
-                  <div className="flex flex-col gap-5 border-t border-white/[0.07] pt-6 sm:flex-row sm:items-center sm:justify-between">
-                    <p className="max-w-[320px] text-[9px] leading-5 text-white/20">
-                      Your message will be handled through the portfolio
-                      contact channel.
-                    </p>
-
-                    <button
-                      type="submit"
-                      className="group inline-flex h-12 shrink-0 items-center justify-between gap-8 border border-cyan-300 bg-cyan-400 px-5 font-mono text-[8px] font-bold tracking-[0.15em] text-black transition-all duration-300 hover:-translate-y-0.5 hover:border-cyan-200 hover:bg-cyan-300 hover:shadow-[0_0_30px_rgba(34,211,238,0.15)]"
-                    >
+                <button
+                  type="submit"
+                  disabled={isSubmitting}
+                  className="group flex h-13 w-full items-center justify-center gap-3 bg-cyan-300 px-6 text-[10px] font-semibold tracking-[0.2em] text-[#041014] transition-all duration-300 hover:bg-cyan-200 disabled:cursor-not-allowed disabled:opacity-50"
+                >
+                  {isSubmitting ? (
+                    <>
+                      <span
+                        aria-hidden="true"
+                        className="h-3.5 w-3.5 animate-spin rounded-full border-2 border-[#041014]/25 border-t-[#041014]"
+                      />
+                      SENDING...
+                    </>
+                  ) : (
+                    <>
                       SEND MESSAGE
-
-                      <span className="text-sm transition-transform duration-300 group-hover:translate-x-1">
+                      <span
+                        aria-hidden="true"
+                        className="text-sm transition-transform duration-300 group-hover:translate-x-1"
+                      >
                         →
                       </span>
-                    </button>
-                  </div>
-                </form>
-              )}
-            </div>
-          </div>
-        </div>
+                    </>
+                  )}
+                </button>
 
-        {/* FINAL CONTACT STATEMENT */}
-        <div className="mt-16 border-t border-white/[0.06] pt-6 sm:mt-20 sm:pt-7">
-          <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-            <p className="font-mono text-[7px] font-bold tracking-[0.18em] text-white/15">
-              MUZAMIL.HASSAN / DIGITAL BUILDER
-            </p>
-
-            <div className="flex items-center gap-3">
-              <span className="h-px w-8 bg-cyan-400/30" />
-
-              <span className="font-mono text-[7px] font-bold tracking-[0.18em] text-cyan-300/40">
-                LET&apos;S CONNECT
-              </span>
-            </div>
+                <p className="text-center text-[10px] leading-5 text-white/25">
+                  Your information is only used to respond to your message.
+                </p>
+              </form>
+            )}
           </div>
         </div>
       </div>
